@@ -1,7 +1,6 @@
 import codecs
-
+import spacy
 from docopt import docopt
-from spacy.en import English
 from collections import defaultdict
 
 
@@ -20,8 +19,7 @@ def main():
         <vocabulary_file> = a file containing the words to include
         <out_file> = the output file
     """)
-
-    nlp = English()
+    nlp = spacy.load('en_core_web_sm')
 
     wiki_file = args['<wiki_file>']
     vocabulary_file = args['<vocabulary_file>']
@@ -62,7 +60,7 @@ def parse_sentence(sent, vocabulary):
     """
 
     # Get all term indices
-    indices = [(token.lemma_, sent[i:i+1], i, i) for i, token in enumerate(sent)
+    indices = [(token.lemma_, sent[i:i + 1], i, i) for i, token in enumerate(sent)
                if len(token.orth_) > 2 and token.lemma_ in vocabulary and token.pos_ in ['NOUN', 'VERB', 'ADJ']]
 
     # Add noun chunks for the current sentence
@@ -146,17 +144,17 @@ def shortest_path(path):
                 break
 
         if len(hx) > i:
-            lch = hx[i-1]
+            lch = hx[i - 1]
         elif len(hy) > i:
-            lch = hy[i-1]
+            lch = hy[i - 1]
         else:
             return None
 
         # The path from x to the lowest common head
-        hx = hx[i+1:]
+        hx = hx[i + 1:]
 
         # The path from the lowest common head to y
-        hy = hy[i+1:]
+        hy = hy[i + 1:]
 
     if lch and check_direction(lch, hx, lambda h: h.lefts):
         return None
@@ -176,7 +174,7 @@ def heads(token):
     """
     t = token
     hs = []
-    while t is not t.head:
+    while t != t.head:
         t = t.head
         hs.append(t)
     return hs[::-1]
