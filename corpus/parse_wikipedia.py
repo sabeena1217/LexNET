@@ -64,7 +64,7 @@ def parse_sentence(sent, vocabulary):
 
     # Get all term indices
     indices = [(token.lemma_, sent[i:i + 1], i, i) for i, token in enumerate(sent)
-               if len(token.orth_) > 2 and token.lemma_ in vocabulary and token.pos_ in ['NOUN', 'VERB', 'ADJ']]
+               if len(token.orth_) > 2 and token.lemma_ in vocabulary and firstCheck(token)]
 
     # Add noun chunks for the current sentence
     # Don't include noun chunks with only one word - these are nouns already included
@@ -251,6 +251,11 @@ def argument_to_string(token, edge_name):
     :param edge_name: 'X' or 'Y'
     :return:
     """
+
+    if token.pos_ == 'PROPN' and firstCheck(token):
+	    tempPOS = 'NOUN'
+	    return '/'.join([edge_name, tempPOS, token.dep_ if token.dep_ != '' else 'ROOT'])
+
     return '/'.join([edge_name, token.pos_, token.dep_ if token.dep_ != '' else 'ROOT'])
 
 
@@ -318,6 +323,22 @@ def pretty_print(set_x_l, x, set_x_r, hx, lch, hy, set_y_l, y, set_y_r):
         return cleaned_path
     else:
         return None
+
+def firstCheck(token):
+    strToken = str(token)
+    strToken = strToken[:1].lower() + strToken[1:]
+    print(strToken)
+
+    nlp = spacy.load('en_core_web_sm')
+    token = nlp(unicode(strToken))
+    for sent in token.sents:
+        for token in sent:
+            tokn= token
+
+    if tokn.pos_ in ['NOUN', 'VERB', 'ADJ']:
+        return True
+    else:
+        return False
 
 
 # Constants
