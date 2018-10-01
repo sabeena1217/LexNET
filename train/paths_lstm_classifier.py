@@ -34,6 +34,10 @@ MINIBATCH_SIZE = 100
 
 
 class PathLSTMClassifier(BaseEstimator):
+    # The authors seek to train recurrent neural networks in order to map input sequences to output sequences,
+    # for applications in sequence recognition or production
+
+    # learning long-term dependencies in such recurrent networks using gradient descent is a very difficult task
 
     def __init__(self, num_lemmas, num_pos, num_dep, num_directions=5, n_epochs=10, num_relations=2,
                  alpha=0.01, lemma_embeddings=None, dropout=0.0, use_xy_embeddings=False, num_hidden_layers=0):
@@ -387,7 +391,10 @@ def create_computation_graph(num_lemmas, num_pos, num_dep, num_directions, num_r
     """
     # model = Model() -- gives error? tried to fix by looking at dynet tutorial examples -- GB
     dy.renew_cg()
+    # clear the current computation graph and starts a new one
     model = dy.ParameterCollection()
+    # First we create a parameter collection and add the parameters to it
+
     network_input = LSTM_HIDDEN_DIM
 
     builder = dy.LSTMBuilder(NUM_LAYERS, lemma_dimension + POS_DIM + DEP_DIM + DIR_DIM, network_input, model)

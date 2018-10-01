@@ -8,7 +8,7 @@ def main():
     """
     Creates a "knowledge resource" from triplets file
     """
-
+    print("Arguments are correct*****************************!")
     # Get the arguments
     args = docopt("""Parse the Wikipedia dump and create a triplets file, each line is formatted as follows: X\t\Y\tpath
 
@@ -28,6 +28,7 @@ def main():
     # Load the phrase pair files
     with codecs.open(vocabulary_file, 'r', 'utf-8') as f_in:
         vocabulary = set([line.strip() for line in f_in])
+    print("vocabulary ", vocabulary)
 
     with codecs.open(wiki_file, 'r', 'utf-8') as f_in:
         with codecs.open(out_file, 'w', 'utf-8') as f_out:
@@ -45,8 +46,10 @@ def main():
                 # Parse each sentence separately
                 for sent in parsed_par.sents:
                     dependency_paths = parse_sentence(sent, vocabulary)
+                    print("dependency_paths ", dependency_paths)
                     if len(dependency_paths) > 0:
                         for (x, y), paths in dependency_paths.iteritems():
+                            print("paths ",paths)
                             for path in paths:
                                 print >> f_out, '\t'.join([x, y, path])
 
